@@ -34,9 +34,9 @@ public class ParseCommand {
 			String fullCommand = new String(input.nextLine());
 			String[] commands = fullCommand.split(" ");
 			command = cmdExecutor.run(commands[0]);
-			String message = commands[0].equals("PRINT_RENEWAL_DETAILS") ? subscriptionsNotFound : invalidDate;
+			String message = "PRINT_RENEWAL_DETAILS".equals(commands[0]) ? subscriptionsNotFound : invalidDate;
 			String prefix = commands[0] + "_FAILED ";
-			Boolean startSubscription = commands[0].equals("START_SUBSCRIPTION") ? runCommand(command, fullCommand)
+			Boolean startSubscription = "START_SUBSCRIPTION".equals(commands[0]) ? runCommand(command, fullCommand)
 					: false;
 			subscription = cmdExecutor.getSubscripton();
 			prefix = printer.getPrefix(prefix, startSubscription, subscription);

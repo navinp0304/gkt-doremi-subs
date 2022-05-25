@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class Subscription {
-	private AddStreamUnique dss = new AddStreamUnique();
+	private final AddStreamUnique dss = new AddStreamUnique();
 
 	private final Map<String, Function<Integer, IPlan>> planCategory = Map.of("FREE", (cst) -> {
 		return new FreePlan(cst);
@@ -25,7 +25,7 @@ public class Subscription {
 	});
 
 	private final String start;
-	private List<IStream> streams = new ArrayList<IStream>();
+	private final List<IStream> streams = new ArrayList<IStream>();
 
 	Subscription(String start) {
 		String[] tokens = start.split(" ");
@@ -53,7 +53,7 @@ public class Subscription {
 		Boolean ignore = retval ? updateRenewals(curstream, plan) : false;
 		return retval;
 	}
-	
+
 	public List<IStream> streams() {
 		return streams;
 	}

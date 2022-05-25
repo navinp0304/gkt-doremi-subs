@@ -8,10 +8,10 @@ import java.util.function.Function;
 public class CommandExecutor {
 	Subscription subscription;
 	ITopup topup;
-	
+
 	private final static String dupSubscription = "ADD_SUBSCRIPTION_FAILED DUPLICATE_CATEGORY\n";
 	private final static String dupTopup = "ADD_TOPUP_FAILED DUPLICATE_TOPUP\n";;
-	private Set<Integer> topups = new HashSet<Integer>();
+	private final Set<Integer> topups = new HashSet<Integer>();
 	PrintMessage printer = new PrintMessage();
 
 	private Boolean addTopup(ITopup topup) {
@@ -20,13 +20,13 @@ public class CommandExecutor {
 		return true;
 	}
 
-	private Map<String, Function<String, ITopup>> topupCategory = Map.of("FOUR_DEVICE", (str) -> {
+	private final Map<String, Function<String, ITopup>> topupCategory = Map.of("FOUR_DEVICE", (str) -> {
 		return new TopupFourDevice(str);
 	}, "TEN_DEVICE", (str) -> {
 		return new TopupTenDevice(str);
 	});
 
-	private Map<String, Function<String, Boolean>> commandDispatch = Map.of("START_SUBSCRIPTION", (date) -> {
+	private final Map<String, Function<String, Boolean>> commandDispatch = Map.of("START_SUBSCRIPTION", (date) -> {
 		try {
 			this.subscription = new Subscription(date);
 			return true;

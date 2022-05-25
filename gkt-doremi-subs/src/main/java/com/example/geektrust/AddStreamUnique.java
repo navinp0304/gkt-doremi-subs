@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 public class AddStreamUnique {
-	private Set<Integer> subscriptions = new HashSet<Integer>();
+	private final Set<Integer> subscriptions = new HashSet<Integer>();
 
 	private Boolean addState(IStream stream, List<IStream> streams) {
 		subscriptions.add(stream.getOffset());
