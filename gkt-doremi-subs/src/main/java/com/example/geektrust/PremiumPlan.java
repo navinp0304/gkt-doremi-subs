@@ -2,7 +2,7 @@ package com.example.geektrust;
 
 public class PremiumPlan implements IPlan {
 	private final Integer cost;
-	private final Integer duration = 3;
+	private static final Integer duration = 3;
 
 	PremiumPlan(Integer cost) {
 		this.cost = cost;
@@ -15,7 +15,7 @@ public class PremiumPlan implements IPlan {
 
 	@Override
 	public Integer duration() {
-		return this.duration;
+		return duration;
 	}
 
 }

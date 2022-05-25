@@ -8,10 +8,9 @@ import java.util.function.Function;
 public class CommandExecutor {
 	Subscription subscription;
 	ITopup topup;
-	private final String invalidDate = "INVALID_DATE\n";
-	private final String subscriptionsNotFound = "SUBSCRIPTIONS_NOT_FOUND\n";
-	private final String dupSubscription = "ADD_SUBSCRIPTION_FAILED DUPLICATE_CATEGORY\n";
-	private final String dupTopup = "ADD_TOPUP_FAILED DUPLICATE_TOPUP\n";;
+	
+	private final static String dupSubscription = "ADD_SUBSCRIPTION_FAILED DUPLICATE_CATEGORY\n";
+	private final static String dupTopup = "ADD_TOPUP_FAILED DUPLICATE_TOPUP\n";;
 	private Set<Integer> topups = new HashSet<Integer>();
 	PrintMessage printer = new PrintMessage();
 
@@ -55,9 +54,5 @@ public class CommandExecutor {
 
 	public Subscription getSubscripton() {
 		return this.subscription;
-	}
-
-	public ITopup getTopup() {
-		return this.topup;
 	}
 }

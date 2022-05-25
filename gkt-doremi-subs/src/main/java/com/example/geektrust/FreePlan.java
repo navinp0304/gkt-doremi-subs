@@ -2,7 +2,7 @@ package com.example.geektrust;
 
 public class FreePlan implements IPlan {
 	private final Integer cost;
-	private final Integer duration = 1;
+	private static final Integer duration = 1;
 
 	FreePlan(Integer cost) {
 		this.cost = cost;

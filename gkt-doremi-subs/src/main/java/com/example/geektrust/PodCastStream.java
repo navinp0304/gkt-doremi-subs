@@ -2,7 +2,7 @@ package com.example.geektrust;
 
 public class PodCastStream implements IStream {
 	private final IPlan plan;
-	private final Integer offset = 6;
+	private static final Integer offset = 6;
 	private String renewalDate;
 
 	public PodCastStream(IPlan plan) {

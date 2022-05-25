@@ -2,7 +2,7 @@ package com.example.geektrust;
 
 public class PersonalPlan implements IPlan {
 	private final Integer cost;
-	private final Integer duration = 1;
+	private static final Integer duration = 1;
 
 	PersonalPlan(Integer cost) {
 		this.cost = cost;

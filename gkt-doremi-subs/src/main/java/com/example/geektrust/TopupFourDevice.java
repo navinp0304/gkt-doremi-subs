@@ -1,8 +1,8 @@
 package com.example.geektrust;
 
 public class TopupFourDevice implements ITopup {
-	private final Integer devices = 4;
-	private final Integer cost = 50;
+	private static final Integer devices = 4;
+	private static final Integer cost = 50;
 	private final Integer duration;
 
 	TopupFourDevice(String duration) {
@@ -12,12 +12,12 @@ public class TopupFourDevice implements ITopup {
 
 	@Override
 	public Integer devices() {
-		return this.devices;
+		return devices;
 	}
 
 	@Override
 	public Integer cost() {
-		return this.cost * duration;
+		return cost * duration;
 	}
 
 }

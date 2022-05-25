@@ -2,7 +2,7 @@ package com.example.geektrust;
 
 public class VideoStream implements IStream {
 	private final IPlan plan;
-	private final Integer offset = 3;
+	private static final Integer offset = 3;
 	private String renewalDate;
 
 	public VideoStream(IPlan plan) {
@@ -24,7 +24,6 @@ public class VideoStream implements IStream {
 	@Override
 	public void setRenewal(String renewal) {
 		this.renewalDate = renewal;
-
 	}
 
 	@Override

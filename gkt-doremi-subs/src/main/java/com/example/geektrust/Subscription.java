@@ -53,7 +53,7 @@ public class Subscription {
 		Boolean ignore = retval ? updateRenewals(curstream, plan) : false;
 		return retval;
 	}
-
+	
 	public List<IStream> streams() {
 		return streams;
 	}
