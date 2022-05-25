@@ -1,12 +1,16 @@
 package com.example.geektrust;
 
-public class FreePlan implements IPlan{
-	final Integer cost = 0;
-	final Integer duration = 1;
-	final Integer offset = 0;
+public class FreePlan implements IPlan {
+	private Integer cost = 0;
+	private final Integer duration = 1;
+
+	FreePlan(Integer cost) {
+		this.cost = cost;
+	}
+
 	@Override
 	public Integer cost() {
-		return cost;
+		return cost * duration;
 	}
 
 	@Override
@@ -14,10 +18,4 @@ public class FreePlan implements IPlan{
 		return duration;
 	}
 
-	@Override
-	public Integer getOffset() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
 }

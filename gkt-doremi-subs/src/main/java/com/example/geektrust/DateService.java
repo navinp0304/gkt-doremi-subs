@@ -6,28 +6,42 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DateService {
-	Date startDate;
-	String renewalDate;
-	Date endDate;
-	
-	DateService(String date,IPlan plan){
+	private Date startDate;
+	private String renewalDate;
+	private String validateDate;
+
+	DateService(String date, IPlan plan) {
 		try {
-			SimpleDateFormat sdf= new SimpleDateFormat("dd-MM-yyyy");
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 			sdf.setLenient(false);
-			this.startDate=sdf.parse(date);
-			Calendar cal = Calendar.getInstance(); 
+			this.startDate = sdf.parse(date);
+			Calendar cal = Calendar.getInstance();
 			cal.setTime(this.startDate);
-			Integer offset = plan.getOffset()/2;
-			cal.add(Calendar.MONTH, offset*2 +1);
-			this.endDate = cal.getTime();
-			cal.add(Calendar.DATE,-10);		
+			cal.add(Calendar.MONTH, plan.duration());
+			cal.add(Calendar.DATE, -10);
 			this.renewalDate = new SimpleDateFormat("dd-MM-yyyy").format(cal.getTime());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			throw new IllegalArgumentException("INVALID_DATE");
-		}  
+		}
 	}
-	
+
+	DateService(String date) {
+		this.validateDate = date;
+	}
+
+	public Boolean isDate() {
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+			sdf.setLenient(false);
+			this.startDate = sdf.parse(validateDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			throw new IllegalArgumentException("INVALID_DATE");
+		}
+		return true;
+	}
+
 	public String renewalDate() {
 		return this.renewalDate;
 	}

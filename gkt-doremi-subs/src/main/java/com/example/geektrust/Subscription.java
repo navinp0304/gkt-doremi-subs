@@ -6,44 +6,56 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class Subscription {
-	AddStreamUnique dss = new AddStreamUnique();
-	
-	public final Map<String, IPlan> planCategory = Map.of(
-			"FREE", new FreePlan(), 
-			"PERSONAL", new PersonalPlan(),
-			"PREMIUM", new PremiumPlan()
-			);
+	private AddStreamUnique dss = new AddStreamUnique();
 
-	public final Map<String, Function<IPlan, IStream>> streamCategory = Map.of(
-			"MUSIC", (plan) -> {
+	private final Map<String, Function<Integer, IPlan>> planCategory = Map.of("FREE", (cst) -> {
+		return new FreePlan(cst);
+	}, "PERSONAL", (cst) -> {
+		return new PersonalPlan(cst);
+	}, "PREMIUM", (cst) -> {
+		return new PremiumPlan(cst);
+	});
+
+	private final Map<String, Function<IPlan, IStream>> streamCategory = Map.of("MUSIC", (plan) -> {
 		return new MusicStream(plan);
-	}, 
-			"VIDEO", (plan) -> {
+	}, "VIDEO", (plan) -> {
 		return new VideoStream(plan);
-	}, 
-			"PODCAST", (plan) -> {
+	}, "PODCAST", (plan) -> {
 		return new PodCastStream(plan);
 	});
 
-	String start;
-	List<IStream> streams = new ArrayList<IStream>();
+	private final String start;
+	private List<IStream> streams = new ArrayList<IStream>();
 
 	Subscription(String start) {
-		this.start = start;
+		String[] tokens = start.split(" ");
+		this.start = tokens[1];
+
+		try {
+			new DateService(this.start).isDate();
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException("INVALID_DATE");
+		}
 	}
 
-	Boolean addStream(String addStream) {
-		String[] tokens = addStream.split(" ");
-		IPlan plan = planCategory.get(tokens[2]);
-		//Function<IPlan, IStream> func = streamCategory.get(tokens[1]);
+	private Boolean updateRenewals(IStream stream, IPlan plan) {
+		stream.setRenewal(new DateService(this.start, plan).renewalDate());
+		return true;
+	}
+
+	public Boolean addStream(String stream) {
+		String[] tokens = stream.split(" ");
+		Integer cost = new CostService(tokens[1], tokens[2]).getCost();
+		IPlan plan = planCategory.get(tokens[2]).apply(cost);
 		Function<IPlan, IStream> func = streamCategory.get(tokens[1]);
-		IStream stream = func.apply(plan);
-		return dss.addStreamUnique(stream,this.streams);
+		IStream curstream = func.apply(plan);
+		Boolean retval = dss.addStreamUnique(curstream, this.streams);
+		Boolean ignore = retval ? updateRenewals(curstream, plan) : false;
+		return retval;
 	}
-	
 
-	public List<String> renewalDate() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<IStream> streams() {
+		return streams;
 	}
+
 }

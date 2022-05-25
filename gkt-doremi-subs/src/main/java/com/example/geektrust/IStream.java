@@ -1,6 +1,13 @@
 package com.example.geektrust;
 
 public interface IStream {
-	IPlan plan();
 	Integer getOffset();
+
+	String streamName();
+
+	void setRenewal(String renewal);
+
+	String getRenewal();
+
+	Integer getCost();
 }

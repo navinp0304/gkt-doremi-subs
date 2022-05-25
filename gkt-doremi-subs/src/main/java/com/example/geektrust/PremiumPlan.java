@@ -1,9 +1,13 @@
 package com.example.geektrust;
 
-public class PremiumPlan implements IPlan{
-	final Integer cost = 250;
-	final Integer duration = 3;
-	final Integer offset = 2;
+public class PremiumPlan implements IPlan {
+	private Integer cost = 250;
+	private final Integer duration = 3;
+
+	PremiumPlan(Integer cost) {
+		this.cost = cost;
+	}
+
 	@Override
 	public Integer cost() {
 		return this.cost;
@@ -12,12 +16,6 @@ public class PremiumPlan implements IPlan{
 	@Override
 	public Integer duration() {
 		return this.duration;
-	}
-
-	@Override
-	public Integer getOffset() {
-		// TODO Auto-generated method stub
-		return offset;
 	}
 
 }
