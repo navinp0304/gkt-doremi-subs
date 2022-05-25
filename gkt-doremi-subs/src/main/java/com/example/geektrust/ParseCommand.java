@@ -88,7 +88,7 @@ public class ParseCommand {
 			String prefix = commands[0] + "_FAILED ";
 			Boolean startSubscription = commands[0].equals("START_SUBSCRIPTION") ? runCommand(command, fullCommand)
 					: false;
-			prefix = getPrefix((startSubscription == true), prefix);
+			prefix = getPrefix(startSubscription , prefix);
 			prefix = getPrefix((commands[0].equals("PRINT_RENEWAL_DETAILS")), prefix);
 			// prefix = ((this.subscription == null) && (startSubscription == true)) ? "" :
 			// prefix;
