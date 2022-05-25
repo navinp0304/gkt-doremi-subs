@@ -67,6 +67,10 @@ public class ParseCommand {
 		this.inputFileName = fileName;
 	}
 
+	private String getPrefix(Boolean x, String prefix) {
+		return ((this.subscription == null) && x) ? "" : prefix;
+	}
+
 	public void run() {
 		Scanner input = null;
 		try {
@@ -79,13 +83,17 @@ public class ParseCommand {
 			String fullCommand = new String(input.nextLine());
 			String[] commands = fullCommand.split(" ");
 			command = commandDispatch.get(commands[0]);
-			String message = "INVALID_DATE\n";
+			String message = this.invalidDate;
 			message = commands[0].equals("PRINT_RENEWAL_DETAILS") ? "SUBSCRIPTIONS_NOT_FOUND\n" : invalidDate;
 			String prefix = commands[0] + "_FAILED ";
 			Boolean startSubscription = commands[0].equals("START_SUBSCRIPTION") ? runCommand(command, fullCommand)
 					: false;
-			prefix = ((this.subscription == null) && (startSubscription == true)) ? "" : prefix;
-			prefix = ((this.subscription == null) && (commands[0].equals("PRINT_RENEWAL_DETAILS"))) ? "" : prefix;
+			prefix = getPrefix((startSubscription == true), prefix);
+			prefix = getPrefix((commands[0].equals("PRINT_RENEWAL_DETAILS")), prefix);
+			// prefix = ((this.subscription == null) && (startSubscription == true)) ? "" :
+			// prefix;
+			// prefix = ((this.subscription == null) &&
+			// (commands[0].equals("PRINT_RENEWAL_DETAILS"))) ? "" : prefix;
 			Boolean ignore = (this.subscription == null) ? printMessage(prefix + message)
 					: runCommand(command, fullCommand);
 		}
