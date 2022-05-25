@@ -3,7 +3,7 @@ package com.example.geektrust;
 public class TopupTenDevice implements ITopup {
 	private final Integer devices = 10;
 	private final Integer cost = 100;
-	private Integer duration = 1;
+	private final Integer duration;
 
 	TopupTenDevice(String duration) {
 		String[] tokens = duration.split(" ");

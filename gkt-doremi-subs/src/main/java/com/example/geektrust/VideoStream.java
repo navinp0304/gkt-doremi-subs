@@ -1,8 +1,8 @@
 package com.example.geektrust;
 
 public class VideoStream implements IStream {
-	private IPlan plan;
-	private Integer offset = 3;
+	private final IPlan plan;
+	private final Integer offset = 3;
 	private String renewalDate;
 
 	public VideoStream(IPlan plan) {

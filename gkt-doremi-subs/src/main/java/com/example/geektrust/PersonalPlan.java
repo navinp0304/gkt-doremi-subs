@@ -1,7 +1,7 @@
 package com.example.geektrust;
 
 public class PersonalPlan implements IPlan {
-	private Integer cost = 100;
+	private final Integer cost ;
 	private final Integer duration = 1;
 
 	PersonalPlan(Integer cost) {

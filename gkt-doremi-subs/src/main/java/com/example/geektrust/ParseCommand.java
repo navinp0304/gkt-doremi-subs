@@ -12,7 +12,9 @@ public class ParseCommand {
 	private Subscription subscription;
 	private ITopup topup;
 	private Set<Integer> topups = new HashSet<Integer>();
-	private String invalidDate = "INVALID_DATE\n";
+	private final String invalidDate = "INVALID_DATE\n";
+	private final String dupSubscription = "ADD_SUBSCRIPTION_FAILED DUPLICATE_CATEGORY\n";
+	private final String dupTopup = "ADD_TOPUP_FAILED DUPLICATE_TOPUP\n";;
 	private final String inputFileName;
 
 	private Map<String, Function<String, ITopup>> topupCategory = Map.of("FOUR_DEVICE", (str) -> {
@@ -43,14 +45,12 @@ public class ParseCommand {
 	}, "ADD_SUBSCRIPTION", (stream) -> {
 
 		Boolean unique = this.subscription.addStream(stream);
-		String duplicateSubscriptionMessage = "ADD_SUBSCRIPTION_FAILED DUPLICATE_CATEGORY\n";
-		Boolean ignore = (unique) ? true : printMessage(duplicateSubscriptionMessage);
+		Boolean ignore = (!unique) ? printMessage(dupSubscription) : true;
 		return ignore;
 	}, "ADD_TOPUP", (topupstr) -> {
 		String[] tokens = topupstr.split(" ");
 		ITopup tmpTopup = topupCategory.get(tokens[1]).apply(topupstr);
-		String duplicateTopupMessage = "ADD_TOPUP_FAILED DUPLICATE_TOPUP\n";
-		Boolean retval = topups.contains(tmpTopup.devices()) ? printMessage(duplicateTopupMessage) : addTopup(tmpTopup);
+		Boolean retval = topups.contains(tmpTopup.devices()) ? printMessage(dupTopup) : addTopup(tmpTopup);
 		return retval;
 	}, "PRINT_RENEWAL_DETAILS", (noStr) -> {
 		PrintRenewalDetails prDetails = new PrintRenewalDetails(this.subscription, this.topup);
@@ -88,12 +88,9 @@ public class ParseCommand {
 			String prefix = commands[0] + "_FAILED ";
 			Boolean startSubscription = commands[0].equals("START_SUBSCRIPTION") ? runCommand(command, fullCommand)
 					: false;
-			prefix = getPrefix(startSubscription , prefix);
+			prefix = getPrefix(startSubscription, prefix);
 			prefix = getPrefix((commands[0].equals("PRINT_RENEWAL_DETAILS")), prefix);
-			// prefix = ((this.subscription == null) && (startSubscription == true)) ? "" :
-			// prefix;
-			// prefix = ((this.subscription == null) &&
-			// (commands[0].equals("PRINT_RENEWAL_DETAILS"))) ? "" : prefix;
+
 			Boolean ignore = (this.subscription == null) ? printMessage(prefix + message)
 					: runCommand(command, fullCommand);
 		}

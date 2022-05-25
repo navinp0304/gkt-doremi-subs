@@ -1,8 +1,8 @@
 package com.example.geektrust;
 
 public class PrintRenewalDetails {
-	private Subscription subscription;
-	private ITopup topup;
+	private final Subscription subscription;
+	private final ITopup topup;
 
 	PrintRenewalDetails(Subscription subscription, ITopup topup) {
 		this.subscription = subscription;
