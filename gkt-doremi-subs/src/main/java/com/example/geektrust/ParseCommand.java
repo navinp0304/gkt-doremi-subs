@@ -13,62 +13,19 @@ public class ParseCommand {
 	private ITopup topup;
 	private Set<Integer> topups = new HashSet<Integer>();
 	private final String invalidDate = "INVALID_DATE\n";
+	private final String subscriptionsNotFound = "SUBSCRIPTIONS_NOT_FOUND\n";
 	private final String dupSubscription = "ADD_SUBSCRIPTION_FAILED DUPLICATE_CATEGORY\n";
 	private final String dupTopup = "ADD_TOPUP_FAILED DUPLICATE_TOPUP\n";;
 	private final String inputFileName;
-
-	private Map<String, Function<String, ITopup>> topupCategory = Map.of("FOUR_DEVICE", (str) -> {
-		return new TopupFourDevice(str);
-	}, "TEN_DEVICE", (str) -> {
-		return new TopupTenDevice(str);
-	});
-
-	private Boolean printMessage(String message) {
-		System.out.printf(message);
-		return true;
-	}
-
-	private Boolean addTopup(ITopup topup) {
-		topups.add(topup.devices());
-		this.topup = topup;
-		return true;
-	}
-
-	private Map<String, Function<String, Boolean>> commandDispatch = Map.of("START_SUBSCRIPTION", (date) -> {
-		try {
-			this.subscription = new Subscription(date);
-			return true;
-		} catch (IllegalArgumentException ex) {
-			return false;
-		}
-
-	}, "ADD_SUBSCRIPTION", (stream) -> {
-
-		Boolean unique = this.subscription.addStream(stream);
-		Boolean ignore = (!unique) ? printMessage(dupSubscription) : true;
-		return ignore;
-	}, "ADD_TOPUP", (topupstr) -> {
-		String[] tokens = topupstr.split(" ");
-		ITopup tmpTopup = topupCategory.get(tokens[1]).apply(topupstr);
-		Boolean retval = topups.contains(tmpTopup.devices()) ? printMessage(dupTopup) : addTopup(tmpTopup);
-		return retval;
-	}, "PRINT_RENEWAL_DETAILS", (noStr) -> {
-		PrintRenewalDetails prDetails = new PrintRenewalDetails(this.subscription, this.topup);
-		prDetails.print();
-		return true;
-	});
-
-	private Boolean runCommand(Function<String, Boolean> command, String fullCommand) {
-		command.apply(fullCommand);
-		return true;
-	}
+	PrintMessage printer = new PrintMessage();
 
 	ParseCommand(String fileName) {
 		this.inputFileName = fileName;
 	}
 
-	private String getPrefix(Boolean x, String prefix) {
-		return ((this.subscription == null) && x) ? "" : prefix;
+	private Boolean runCommand(Function<String, Boolean> command, String fullCommand) {
+		command.apply(fullCommand);
+		return true;
 	}
 
 	public void run() {
@@ -78,21 +35,25 @@ public class ParseCommand {
 		} catch (FileNotFoundException e) {
 			return;
 		}
+		CommandExecutor cmdExecutor = new CommandExecutor();
 		Function<String, Boolean> command;
 		while (input.hasNextLine()) {
 			String fullCommand = new String(input.nextLine());
 			String[] commands = fullCommand.split(" ");
-			command = commandDispatch.get(commands[0]);
-			String message = this.invalidDate;
-			message = commands[0].equals("PRINT_RENEWAL_DETAILS") ? "SUBSCRIPTIONS_NOT_FOUND\n" : invalidDate;
+			command = cmdExecutor.run(commands[0]);
+			String message = commands[0].equals("PRINT_RENEWAL_DETAILS") ? subscriptionsNotFound : invalidDate;
 			String prefix = commands[0] + "_FAILED ";
+
 			Boolean startSubscription = commands[0].equals("START_SUBSCRIPTION") ? runCommand(command, fullCommand)
 					: false;
-			prefix = getPrefix(startSubscription, prefix);
-			prefix = getPrefix((commands[0].equals("PRINT_RENEWAL_DETAILS")), prefix);
+			this.subscription = cmdExecutor.getSubscripton();
+			this.topup = cmdExecutor.getTopup();
+			prefix = printer.getPrefix(prefix, startSubscription, subscription);
+			prefix = printer.getPrefix(prefix, subscription, commands[0], "PRINT_RENEWAL_DETAILS");
 
-			Boolean ignore = (this.subscription == null) ? printMessage(prefix + message)
+			Boolean ignore = (this.subscription == null) ? printer.printMessage(prefix + message)
 					: runCommand(command, fullCommand);
+
 		}
 	}
 }
