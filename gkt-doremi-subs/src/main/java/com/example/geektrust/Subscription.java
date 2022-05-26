@@ -30,32 +30,27 @@ public class Subscription {
 	Subscription(String start) {
 		String[] tokens = start.split(" ");
 		this.start = tokens[1];
-
-		try {
-			new DateService(this.start).isDate();
-		} catch (IllegalArgumentException ex) {
-			throw new IllegalArgumentException("INVALID_DATE");
-		}
+		// validates start date
+		new DateService(this.start, new FreePlan(0));
 	}
 
-	private Boolean updateRenewals(IStream stream, IPlan plan) {
-		stream.setRenewal(new DateService(this.start, plan).renewalDate());
-		return true;
+	private IPlan getPlan(String planStr, Integer cost) {
+		return planCategory.get(planStr).apply(cost);
 	}
 
-	public Boolean addStream(String stream) {
-		String[] tokens = stream.split(" ");
-		Integer cost = new CostService(tokens[1], tokens[2]).getCost();
-		IPlan plan = planCategory.get(tokens[2]).apply(cost);
-		Function<IPlan, IStream> func = streamCategory.get(tokens[1]);
-		IStream curstream = func.apply(plan);
+	private IStream getStream(String streamStr, IPlan plan) {
+		return streamCategory.get(streamStr).apply(plan);
+	}
+
+	public Boolean addStream(String streamStr, String planStr, Integer cost) {
+		IPlan plan = getPlan(planStr, cost);
+		IStream curstream = getStream(streamStr, plan);
 		Boolean retval = dss.addStreamUnique(curstream, this.streams);
-		Boolean ignore = retval ? updateRenewals(curstream, plan) : false;
+		curstream.setRenewal(new DateService(this.start, plan).renewalDate());
 		return retval;
 	}
 
 	public List<IStream> streams() {
 		return streams;
 	}
-
 }

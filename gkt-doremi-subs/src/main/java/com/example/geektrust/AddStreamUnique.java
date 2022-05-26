@@ -13,7 +13,11 @@ public class AddStreamUnique {
 		return true;
 	}
 
+	private Boolean createDuplicateException() {
+		throw new IllegalArgumentException("ADD_SUBSCRIPTION_FAILED DUPLICATE_CATEGORY");
+	}
+
 	Boolean addStreamUnique(IStream stream, List<IStream> streams) {
-		return subscriptions.contains(stream.getOffset()) ? false : addState(stream, streams);
+		return subscriptions.contains(stream.getOffset()) ? createDuplicateException() : addState(stream, streams);
 	}
 }

@@ -14,30 +14,4 @@ class DateServiceTest {
 			assertEquals(ex.getMessage(), "INVALID_DATE");
 		}
 	}
-
-	@Test
-	void testDateServiceString() {
-		try {
-			new DateService("10-22-2010");
-		} catch (IllegalArgumentException ex) {
-			assertEquals(ex.getMessage(), "INVALID_DATE");
-		}
-	}
-
-	@Test
-	void testIsDate() {
-		try {
-			new DateService("10-22-2010").isDate();
-		} catch (IllegalArgumentException ex) {
-			assertTrue(true);
-			return;
-		}
-		assertFalse(true);
-	}
-
-	@Test
-	void testRenewalDate() {
-
-	}
-
 }

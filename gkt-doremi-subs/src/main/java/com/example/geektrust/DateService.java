@@ -26,22 +26,6 @@ public class DateService {
 		}
 	}
 
-	DateService(String date) {
-		this.validateDate = date;
-	}
-
-	public Boolean isDate() {
-		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-			sdf.setLenient(false);
-			this.startDate = sdf.parse(validateDate);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			throw new IllegalArgumentException("INVALID_DATE");
-		}
-		return true;
-	}
-
 	public String renewalDate() {
 		return this.renewalDate;
 	}
